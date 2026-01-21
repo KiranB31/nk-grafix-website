@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title} + ' | Grafix Insights'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        .blog-header {
+            padding: 120px 8% 60px;
+            text-align: center;
+        }
+
+        .blog-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-meta {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .blog-container {
+            max-width: 900px;
+            margin: 0 auto 100px;
+            padding: 0 8%;
+        }
+
+        .featured-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 30px;
+            margin-bottom: 4rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .blog-body {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--text-main);
+        }
+
+        .blog-body p {
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/" class="logo">GRAFIX.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/blog" class="active">Blog</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="blog-header animate">
+        <span class="blog-meta" th:text="${post.date}">Date</span>
+        <h1 th:text="${post.title}">Blog Title</h1>
+    </div>
+
+    <div class="blog-container animate" style="animation-delay: 0.2s;">
+        <img th:src="${post.imageUrl}" class="featured-img" alt="Blog Featured Image">
+        <div class="blog-body">
+            <p th:text="${post.content}">Full blog content goes here...</p>
+            <p>Our studio remains committed to pushing the boundaries of what is possible in design. We believe that
+                every brand has a story to tell, and our mission is to ensure that story is told with maximum impact and
+                visual elegance.</p>
+            <p>Thank you for following our journey. Stay tuned for more insights from the core of the creative industry.
+            </p>
+        </div>
+        <div
+            style="margin-top: 5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3rem; text-align: center;">
+            <a href="/blog" class="btn btn-primary">Back to All Insights</a>
+        </div>
+    </div>
+
+    <footer style="padding: 4rem 8%; background: #070b14; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
+            <div>
+                <a href="/" class="logo" style="margin-bottom: 1.5rem; display: block;">GRAFIX.</a>
+                <p style="color: var(--text-muted);">Professional Design Studio since 2018. We specialize in premium
+                    digital assets and corporate identities.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">The Studio</h4>
+                <p style="color: var(--text-muted);">Crafting visual excellence for the modern digital landscape.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

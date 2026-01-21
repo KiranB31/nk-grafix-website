@@ -1,0 +1,9 @@
+{
+    "name": "grafix-website-vercel",
+    "version": "1.0.0",
+    "description": "Grafix Website migrated to Vercel",
+    "main": "api/contact.js",
+    "dependencies": {
+        "uuid": "^9.0.0"
+    }
+}

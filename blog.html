@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog & News | Grafix</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <nav>
+        <a href="/" class="logo">GRAFIX.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/blog" class="active">Blog</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="section" style="padding-top: 10rem;">
+        <div class="section-content animate">
+            <h1 class="section-title" style="text-align: left;">Insights & Innovation.</h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px;">
+                Stay updated with the latest trends in design, technology, and branding.
+            </p>
+        </div>
+    </header>
+
+    <section class="section section-alt">
+        <div class="section-content">
+            <div class="blog-grid">
+                <article th:each="post : ${posts}" class="blog-card animate">
+                    <img th:src="${post.imageUrl}" th:alt="${post.title}" class="blog-img">
+                    <div class="blog-content">
+                        <span class="blog-date" th:text="${post.date}">JANUARY 15, 2026</span>
+                        <h3 th:text="${post.title}">The Future of AI in Design</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;" th:text="${post.content}">
+                            How machine learning is transforming the way we create brand identities...
+                        </p>
+                        <a th:href="@{'/blog/' + ${post.id}}" class="blog-link">Read More <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 4rem 10%; background: #070b14; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
+            <div>
+                <div class="logo" style="margin-bottom: 1.5rem;">GRAFIX.</div>
+                <p style="color: var(--text-muted);">Expanding the reach of creativity through premium design solutions.
+                </p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">Quick Links</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <a href="/" style="color: var(--text-muted); text-decoration: none;">Home</a>
+                    <a href="/products" style="color: var(--text-muted); text-decoration: none;">Products</a>
+                    <a href="/blog" style="color: var(--text-muted); text-decoration: none;">Blog</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">Contact Info</h4>
+                <p style="color: var(--text-muted);">hello@grafix.com<br>+1 (555) 123-4567<br>123 Design Street, CA</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+{
+    "version": 2,
+    "rewrites": [
+        {
+            "source": "/contact",
+            "destination": "/contact.html"
+        },
+        {
+            "source": "/about",
+            "destination": "/about.html"
+        },
+        {
+            "source": "/blog",
+            "destination": "/blog.html"
+        },
+        {
+            "source": "/products",
+            "destination": "/products.html"
+        },
+        {
+            "source": "/login",
+            "destination": "/login.html"
+        },
+        {
+            "source": "/admin/dashboard",
+            "destination": "/admin-dashboard.html"
+        },
+        {
+            "source": "/admin/messages",
+            "destination": "/admin-messages.html"
+        },
+        {
+            "source": "/admin/reviews",
+            "destination": "/admin-reviews.html"
+        },
+        {
+            "source": "/admin/products",
+            "destination": "/admin-products.html"
+        },
+        {
+            "source": "/admin/blog",
+            "destination": "/admin-blog.html"
+        },
+        {
+            "source": "/admin/subscribers",
+            "destination": "/admin-subscribers.html"
+        }
+    ]
+}

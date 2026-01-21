@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/products" class="active">Products</a>
+            <a href="/admin/reviews">Reviews</a>
+            <a href="/admin/blog">Blog</a>
+            <a href="/admin/add-product" class="btn btn-primary" style="padding: 0.5rem 1rem;">Add New</a>
+        </div>
+    </nav>
+
+    <div class="section" style="padding-top: 8rem;">
+        <div class="section-content">
+            <h1>Product Catalog Management</h1>
+            <div class="grid" style="margin-top: 2rem;">
+                <div th:each="product : ${products}" class="card">
+                    <img th:src="${product.imageUrl}" th:alt="${product.name}"
+                        style="height: 150px; object-fit: cover;">
+                    <h3 th:text="${product.name}">Product Name</h3>
+                    <p th:text="${product.price}" style="color: var(--primary); font-weight: 800;">$0.00</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <a th:href="@{'/admin/products/delete/' + ${product.id}}" class="btn"
+                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); flex: 1; text-align: center;">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(products)}"
+                style="text-align: center; padding: 5rem; color: var(--text-muted);">
+                No products found. Start by adding one!
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Messages | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        .admin-table-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/products">Products</a>
+            <a href="/admin/reviews">Reviews</a>
+            <a href="/admin/messages" class="active">Messages</a>
+            <a href="/admin/blog">Blog</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn"
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="admin-table-container">
+        <h1>Contact Messages</h1>
+        <p style="color: var(--text-muted);">View inquiries submitted via the contact form.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Message</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="msg : ${messages}">
+                    <td th:text="${msg.date}" style="white-space: nowrap;">2026-01-21</td>
+                    <td>
+                        <div style="font-weight: 600;" th:text="${msg.name}">John Doe</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted)" th:text="${msg.email}">john@example.com
+                        </div>
+                    </td>
+                    <td style="max-width: 400px;">
+                        <p style="font-size: 0.9rem;" th:text="${msg.message}">This is a user message.</p>
+                    </td>
+                    <td>
+                        <a th:href="@{'/admin/messages/delete/' + ${msg.id}}" class="btn"
+                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); padding: 0.4rem 0.8rem; font-size: 0.75rem;">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:if="${#lists.isEmpty(messages)}" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+            No messages yet.
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Blog | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/products">Products</a>
+            <a href="/admin/reviews">Reviews</a>
+            <a href="/admin/blog" class="active">Blog</a>
+            <a href="/admin/blog/add" class="btn btn-primary" style="padding: 0.5rem 1rem;">New Post</a>
+        </div>
+    </nav>
+
+    <div class="section" style="padding-top: 8rem;">
+        <div class="section-content">
+            <h1>Blog & News Management</h1>
+            <div class="blog-grid" style="margin-top: 2rem;">
+                <article th:each="post : ${posts}" class="blog-card" style="position: relative;">
+                    <img th:src="${post.imageUrl}" th:alt="${post.title}" class="blog-img">
+                    <div class="blog-content">
+                        <span class="blog-date" th:text="${post.date}">Date</span>
+                        <h3 th:text="${post.title}">Post Title</h3>
+                        <div style="margin-top: 1rem;">
+                            <a th:href="@{'/admin/blog/delete/' + ${post.id}}" class="btn"
+                                style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); width: 100%; text-align: center; display: block;">Delete
+                                Post</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div th:if="${#lists.isEmpty(posts)}" style="text-align: center; padding: 5rem; color: var(--text-muted);">
+                No blog posts yet. Share some industry insights!
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
