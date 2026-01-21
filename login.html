@@ -81,9 +81,10 @@
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
 
-            // Simplified login for Vercel demonstration
-            // In a real app, you would verify this against a secure backend/API
-            if (user === 'admin' && pass === 'admin') {
+            // Updated to match original Java security config
+            if (user === 'admin' && pass === 'admin123') {
+                window.location.href = '/admin/dashboard';
+            } else if (user === 'staff' && pass === 'staff123') {
                 window.location.href = '/admin/dashboard';
             } else {
                 document.getElementById('error-msg').style.display = 'block';
