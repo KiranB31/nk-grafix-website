@@ -6,51 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Grafix</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
-    <style>
-        .login-container {
-            max-width: 450px;
-            margin: 15vh auto;
-            background: var(--bg-card);
-            padding: 3rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .login-form {
-            margin-top: 2rem;
-            text-align: left;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        #error-msg {
-            display: none;
-            background: rgba(244, 63, 94, 0.1);
-            color: #f43f5e;
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="login-container"
+        style="max-width: 450px; margin: 15vh auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
         <div class="logo" style="margin-bottom: 1rem;">GRAFIX. ADMIN</div>
         <h1>Portal Access</h1>
-        <p style="color: var(--text-muted);">Please enter your credentials to manage the studio.</p>
+        <p style="color: var(--text-muted);">Please enter your credentials.</p>
 
-        <form onsubmit="handleLogin(event)" class="login-form">
-            <div id="error-msg">
-                Invalid username or password. Please try again.
+        <form id="loginForm" class="login-form" style="margin-top: 2rem; text-align: left;">
+            <div id="error-msg"
+                style="display: none; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.9rem;">
+                Invalid username or password.
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label
                     style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Username</label>
                 <input type="text" id="username"
@@ -58,7 +29,7 @@
                     required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label
                     style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Password</label>
                 <input type="password" id="password"
@@ -70,26 +41,37 @@
                 In</button>
         </form>
 
-        <a href="/"
-            style="display: block; margin-top: 2rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">&larr;
-            Back to Website</a>
+        <div style="margin-top: 2rem;">
+            <a href="/register" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Register New
+                Admin</a>
+            <span style="color: var(--text-muted); margin: 0 10px;">|</span>
+            <a href="/" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Back to Website</a>
+        </div>
     </div>
 
     <script>
-        function handleLogin(e) {
+        document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const data = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
 
-            // Updated to match original Java security config
-            if (user === 'admin' && pass === 'admin123') {
-                window.location.href = '/admin/dashboard';
-            } else if (user === 'staff' && pass === 'staff123') {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                localStorage.setItem('admin_token', result.token);
+                localStorage.setItem('admin_user', JSON.stringify(result.user));
                 window.location.href = '/admin/dashboard';
             } else {
                 document.getElementById('error-msg').style.display = 'block';
             }
-        }
+        };
     </script>
 </body>
 

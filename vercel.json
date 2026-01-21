@@ -22,6 +22,10 @@
             "destination": "/login.html"
         },
         {
+            "source": "/register",
+            "destination": "/register.html"
+        },
+        {
             "source": "/admin/dashboard",
             "destination": "/admin-dashboard.html"
         },
