@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Blog Post | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/blog">Blog</a>
+        </div>
+    </nav>
+
+    <div class="admin-container"
+        style="max-width: 800px; margin: 100px auto; background: var(--bg-card); padding: 3rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
+        <h1 style="margin-bottom: 2rem;">Create Blog Post</h1>
+        <form th:action="@{/admin/blog/add}" th:object="${post}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Article Title</label>
+                <input type="text" th:field="*{title}" placeholder="e.g. Trends in 2026" required
+                    style="width: 100%; padding: 1rem; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white;">
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label>Featured Image</label>
+                <input type="file" name="imageFile" accept="image/*" required
+                    style="width: 100%; padding: 1rem; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white;">
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label>Content Summary</label>
+                <textarea th:field="*{content}" rows="6" placeholder="Write a brief summary of the article..." required
+                    style="width: 100%; padding: 1rem; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 1.2rem; margin-top: 2rem;">Publish Article</button>
+        </form>
+    </div>
+</body>
+
+</html>

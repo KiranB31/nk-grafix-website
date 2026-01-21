@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafix | Premium Design Studio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .business-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 6rem 8%;
+        }
+
+        .business-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Team Styles */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .team-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 2px solid var(--primary);
+            padding: 5px;
+        }
+
+        /* Portfolio Styles */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+        <a href="/" class="logo">GRAFIX.</a>
+        <div class="nav-links">
+            <a href="/" class="active">Home</a>
+            <a href="/products">Products</a>
+            <a href="/reviews/add">Add Review</a>
+            <a href="/blog">Blog</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a sec:authorize="hasAnyRole('ADMIN', 'STAFF')" href="/admin/dashboard" style="color: var(--accent);">Admin
+                Dashboard</a>
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post"
+                style="display: inline; margin-left: 1rem;">
+                <button type="submit" class="btn"
+                    style="padding: 0.4rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
+            </form>
+            <a sec:authorize="isAnonymous()" href="/login" class="btn"
+                style="padding: 0.4rem 1rem; font-size: 0.8rem; border: 1px solid var(--primary); color: var(--primary);">Portal</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1 class="animate">Visualizing Tomorrow,<br>Designing Today.</h1>
+        <p class="animate" style="animation-delay: 0.2s;">Grafix is a premier digital studio specializing in premium
+            brand assets, holographic print tech, and cutting-edge visual identities.</p>
+        <div class="animate" style="animation-delay: 0.4s; margin-top: 2rem;">
+            <a href="/products" class="btn btn-primary">Our Products</a>
+            <a href="/reviews/add" class="btn" style="border: 1px solid white; color: white; margin-left: 1rem;">Submit
+                Feedback</a>
+        </div>
+    </header>
+
+    <section class="business-details">
+        <div class="business-text animate">
+            <h2>The Studio Philosophy</h2>
+            <p style="color: var(--text-muted); line-height: 1.8;">At Grafix, we merge artistic intuition with
+                data-driven UX. Our mission is to provide businesses with the visual firepower they need to dominate
+                their market niches. From startup kits to enterprise design systems, we handle it all with precision.
+            </p>
+            <div class="business-stats">
+                <div class="stat-box">
+                    <h4>500+</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Active Clients</p>
+                </div>
+                <div class="stat-box">
+                    <h4>12k</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Assets Delivered</p>
+                </div>
+                <div class="stat-box">
+                    <h4>99%</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Satisfaction Rate</p>
+                </div>
+                <div class="stat-box">
+                    <h4>24/7</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Support Active</p>
+                </div>
+            </div>
+        </div>
+        <div class="animate" style="animation-delay: 0.3s;">
+            <img src="/images/card1.png" alt="About Grafix"
+                style="width: 100%; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+        </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="section-content">
+            <h2 class="section-title">Studio Portfolio</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">A glimpse into our most iconic
+                brand transformations.</p>
+            <div class="portfolio-grid">
+                <div class="portfolio-item animate">
+                    <img src="/images/card1.png" alt="Portfolio 1">
+                    <div class="portfolio-overlay">
+                        <h4>Aether Branding</h4>
+                        <p style="font-size: 0.8rem;">Visual Identity & Mobile App</p>
+                    </div>
+                </div>
+                <div class="portfolio-item animate" style="animation-delay: 0.1s;">
+                    <img src="/images/card2.png" alt="Portfolio 2">
+                    <div class="portfolio-overlay">
+                        <h4>Neon Pulse</h4>
+                        <p style="font-size: 0.8rem;">Digital Marketing Assets</p>
+                    </div>
+                </div>
+                <div class="portfolio-item animate" style="animation-delay: 0.2s;">
+                    <img src="/images/card1.png" alt="Portfolio 3">
+                    <div class="portfolio-overlay">
+                        <h4>Zenith Core</h4>
+                        <p style="font-size: 0.8rem;">Enterprise Design System</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="section-content">
+            <h2 class="section-title">Our Creative Team</h2>
+            <div class="team-grid">
+                <div class="team-card animate">
+                    <img src="/images/card1.png" class="team-img" alt="Founder">
+                    <h4>Marcus Vance</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem;">Founder & CD</p>
+                </div>
+                <div class="team-card animate" style="animation-delay: 0.1s;">
+                    <img src="/images/card2.png" class="team-img" alt="Lead Designer">
+                    <h4>Sarah Chen</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem;">Lead UX Architect</p>
+                </div>
+                <div class="team-card animate" style="animation-delay: 0.2s;">
+                    <img src="/images/card1.png" class="team-img" alt="Print specialist">
+                    <h4>Julian Ross</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem;">Print Tech Director</p>
+                </div>
+                <div class="team-card animate" style="animation-delay: 0.3s;">
+                    <img src="/images/card2.png" class="team-img" alt="Strategist">
+                    <h4>Elena Vogt</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem;">Brand Strategist</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-content">
+            <h2 class="section-title">Our Premium Products</h2>
+            <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <div th:each="product : ${products}" class="product-preview-card animate">
+                    <img th:src="${product.imageUrl}" class="product-preview-img" th:alt="${product.name}">
+                    <div class="product-preview-content">
+                        <h3 th:text="${product.name}">Product Name</h3>
+                        <p th:text="${product.price}"
+                            style="color: var(--primary); font-weight: 800; font-size: 1.2rem; margin: 0.5rem 0;">$0.00
+                        </p>
+                        <p th:text="${product.description}"
+                            style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+                        </p>
+                        <a href="/contact" class="btn btn-primary"
+                            style="width: 100%; text-align: center; display: block;">Inquire Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="section-content">
+            <h2 class="section-title">Latest Industry Insights</h2>
+            <div class="blog-grid">
+                <article th:each="post : ${recentPosts}" class="blog-card animate">
+                    <img th:src="${post.imageUrl}" th:alt="${post.title}" class="blog-img">
+                    <div class="blog-content">
+                        <span class="blog-date" th:text="${post.date}">Date</span>
+                        <h3 th:text="${post.title}">Blog Title</h3>
+                        <a th:href="@{'/blog/' + ${post.id}}" class="blog-link">Read Full Article <i
+                                class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i></a>
+                    </div>
+                </article>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="/blog" class="btn" style="border: 1px solid var(--primary); color: var(--primary);">View All
+                    Articles</a>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 4rem 8%; background: #070b14; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
+            <div>
+                <a href="/" class="logo" style="margin-bottom: 1.5rem; display: block;">GRAFIX.</a>
+                <p style="color: var(--text-muted);">Professional Design Studio since 2018. We specialize in premium
+                    digital assets and corporate identities.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">The Studio</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <a href="/" style="color: var(--text-muted); text-decoration: none;">Home</a>
+                    <a href="/products" style="color: var(--text-muted); text-decoration: none;">Products</a>
+                    <a href="/blog" style="color: var(--text-muted); text-decoration: none;">Insights</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">Contact</h4>
+                <p style="color: var(--text-muted);">hello@grafix.com<br>123 Design Street, Studio 4<br>+1 (555)
+                    123-4567</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

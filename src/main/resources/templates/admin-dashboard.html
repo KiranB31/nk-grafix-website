@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 1rem 0;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/" style="color: var(--text-muted);">View Site</a>
+            <a href="/admin/dashboard" class="active">Dashboard</a>
+            <a href="/admin/products">Products</a>
+            <a href="/admin/reviews">Reviews</a>
+            <a href="/admin/messages">Messages</a>
+            <a href="/admin/blog">Blog</a>
+            <a href="/admin/subscribers">Subscribers</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn"
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="section" style="padding-top: 8rem;">
+        <div class="section-content animate">
+            <h1>Studio Overview</h1>
+            <p style="color: var(--text-muted);">Real-time metrics for your creative ecosystem.</p>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <i class="fas fa-boxes"></i>
+                    <h3>Digital Assets</h3>
+                    <p class="value" th:text="${productCount}">0</p>
+                    <a href="/admin/products" class="blog-link">Manage Items</a>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-comment-alt"></i>
+                    <h3>User Reviews</h3>
+                    <p class="value" th:text="${reviewCount}">0</p>
+                    <a href="/admin/reviews" class="blog-link">View Feedback</a>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>Blog Posts</h3>
+                    <p class="value" th:text="${postCount}">0</p>
+                    <a href="/admin/blog" class="blog-link">Edit Stories</a>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Mailing List</h3>
+                    <p class="value" th:text="${subscriberCount}">0</p>
+                    <a href="/admin/subscribers" class="blog-link">View List</a>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Contact Messages</h3>
+                    <p class="value" th:text="${messageCount}">0</p>
+                    <a href="/admin/messages" class="blog-link">Read Messages</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

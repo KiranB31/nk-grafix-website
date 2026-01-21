@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribers | Grafix Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">GRAFIX. ADMIN</div>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/products">Products</a>
+            <a href="/admin/reviews">Reviews</a>
+            <a href="/admin/blog">Blog</a>
+            <a href="/admin/subscribers" class="active">Subscribers</a>
+        </div>
+    </nav>
+
+    <div class="admin-table-container"
+        style="max-width: 800px; margin: 100px auto; background: var(--bg-card); padding: 3rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+        <h1>Newsletter Subscribers</h1>
+        <p style="color: var(--text-muted);">Manage your mailing list for marketing campaigns.</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 2rem;">
+            <thead>
+                <tr style="text-align: left; color: var(--primary);">
+                    <th style="padding: 1rem;">#</th>
+                    <th style="padding: 1rem;">Email Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="email, iter : ${subscribers}" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td th:text="${iter.count}" style="padding: 1rem;">1</td>
+                    <td th:text="${email}" style="padding: 1rem;">user@example.com</td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:if="${#lists.isEmpty(subscribers)}"
+            style="text-align: center; padding: 4rem; color: var(--text-muted);">
+            No subscribers yet.
+        </div>
+    </div>
+</body>
+
+</html>

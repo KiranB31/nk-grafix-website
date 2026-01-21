@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Grafix</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 15vh auto;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .login-form {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .error-msg {
+            background: rgba(244, 63, 94, 0.1);
+            color: #f43f5e;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo" style="margin-bottom: 1rem;">GRAFIX. ADMIN</div>
+        <h1>Portal Access</h1>
+        <p style="color: var(--text-muted);">Please enter your credentials to manage the studio.</p>
+
+        <form th:action="@{/login}" method="post" class="login-form">
+            <div th:if="${param.error}" class="error-msg">
+                Invalid username or password. Please try again.
+            </div>
+
+            <div class="form-group">
+                <label
+                    style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Username</label>
+                <input type="text" name="username"
+                    style="width: 100%; padding: 1rem; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label
+                    style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Password</label>
+                <input type="password" name="password"
+                    style="width: 100%; padding: 1rem; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;"
+                    required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.2rem; margin-top: 1rem;">Sign
+                In</button>
+        </form>
+
+        <a href="/"
+            style="display: block; margin-top: 2rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">&larr;
+            Back to Website</a>
+    </div>
+</body>
+
+</html>
