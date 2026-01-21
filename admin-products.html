@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products | Grafix Admin</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,35 +14,114 @@
     <nav>
         <div class="logo">GRAFIX. ADMIN</div>
         <div class="nav-links">
+            <a href="/" style="color: var(--text-muted);">View Site</a>
             <a href="/admin/dashboard">Dashboard</a>
             <a href="/admin/products" class="active">Products</a>
-            <a href="/admin/reviews">Reviews</a>
             <a href="/admin/blog">Blog</a>
-            <a href="/admin/add-product" class="btn btn-primary" style="padding: 0.5rem 1rem;">Add New</a>
+            <a href="/admin/profile">Settings</a>
+            <button onclick="logout()" class="btn"
+                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
         </div>
     </nav>
 
     <div class="section" style="padding-top: 8rem;">
-        <div class="section-content">
-            <h1>Product Catalog Management</h1>
-            <div class="grid" style="margin-top: 2rem;">
-                <div th:each="product : ${products}" class="card">
-                    <img th:src="${product.imageUrl}" th:alt="${product.name}"
-                        style="height: 150px; object-fit: cover;">
-                    <h3 th:text="${product.name}">Product Name</h3>
-                    <p th:text="${product.price}" style="color: var(--primary); font-weight: 800;">$0.00</p>
-                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                        <a th:href="@{'/admin/products/delete/' + ${product.id}}" class="btn"
-                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); flex: 1; text-align: center;">Delete</a>
-                    </div>
-                </div>
+        <div class="section-content animate">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <h1>Product Inventory</h1>
+                <button onclick="showAddForm()" class="btn btn-primary">+ Add New Product</button>
             </div>
-            <div th:if="${#lists.isEmpty(products)}"
-                style="text-align: center; padding: 5rem; color: var(--text-muted);">
-                No products found. Start by adding one!
+
+            <div id="addForm"
+                style="display: none; background: var(--bg-card); padding: 2rem; border-radius: 20px; border: 1px solid var(--primary); margin-bottom: 3rem;">
+                <h3>Add New Product</h3>
+                <form id="newProductForm"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="p_name" required
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Price (e.g. $199)</label>
+                        <input type="text" id="p_price" required
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Image URL</label>
+                        <input type="text" id="p_image" placeholder="https://..."
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Description</label>
+                        <textarea id="p_desc" rows="3"
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;"></textarea>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                        <button type="button" onclick="hideAddForm()" class="btn" style="color: white;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid" id="productGrid">
+                <!-- Products loaded here -->
             </div>
         </div>
     </div>
+
+    <script>
+        if (!localStorage.getItem('admin_token')) window.location.href = '/login';
+
+        function showAddForm() { document.getElementById('addForm').style.display = 'block'; }
+        function hideAddForm() { document.getElementById('addForm').style.display = 'none'; }
+
+        async function loadProducts() {
+            const res = await fetch('/api/products');
+            const products = await res.json();
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => `
+                <div class="card animate">
+                    <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;">
+                    <h3>${p.name}</h3>
+                    <p style="color: var(--primary); font-weight: 800;">${p.price}</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">${p.description}</p>
+                    <button onclick="removeProduct(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid #f43f5e;">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('newProductForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('p_name').value,
+                price: document.getElementById('p_price').value,
+                image_url: document.getElementById('p_image').value,
+                description: document.getElementById('p_desc').value
+            };
+
+            await fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            hideAddForm();
+            loadProducts();
+        };
+
+        async function removeProduct(id) {
+            if (confirm('Are you sure?')) {
+                await fetch('/api/products?id=' + id, { method: 'DELETE' });
+                loadProducts();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = '/login';
+        }
+
+        loadProducts();
+    </script>
 </body>
 
 </html>

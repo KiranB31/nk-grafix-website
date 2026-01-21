@@ -10,12 +10,11 @@ module.exports = async (req, res) => {
         }
 
         if (req.method === 'POST') {
-            // In real app, verify JWT here
-            const { company_name, address, email, phone, philosophy, vision } = req.body;
+            const { company_name, address, email, phone, philosophy, vision, owner_name } = req.body;
 
             await db.execute(
-                'UPDATE business_info SET company_name = ?, address = ?, email = ?, phone = ?, philosophy = ?, vision = ? WHERE id = 1',
-                [company_name, address, email, phone, philosophy, vision]
+                'UPDATE business_info SET company_name = ?, address = ?, email = ?, phone = ?, philosophy = ?, vision = ?, owner_name = ? WHERE id = 1',
+                [company_name, address, email, phone, philosophy, vision, owner_name]
             );
 
             return res.status(200).json({ success: true });

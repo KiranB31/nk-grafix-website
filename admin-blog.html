@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Blog | Grafix Admin</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,36 +14,107 @@
     <nav>
         <div class="logo">GRAFIX. ADMIN</div>
         <div class="nav-links">
+            <a href="/" style="color: var(--text-muted);">View Site</a>
             <a href="/admin/dashboard">Dashboard</a>
             <a href="/admin/products">Products</a>
-            <a href="/admin/reviews">Reviews</a>
             <a href="/admin/blog" class="active">Blog</a>
-            <a href="/admin/blog/add" class="btn btn-primary" style="padding: 0.5rem 1rem;">New Post</a>
+            <a href="/admin/profile">Settings</a>
+            <button onclick="logout()" class="btn"
+                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
         </div>
     </nav>
 
     <div class="section" style="padding-top: 8rem;">
-        <div class="section-content">
-            <h1>Blog & News Management</h1>
-            <div class="blog-grid" style="margin-top: 2rem;">
-                <article th:each="post : ${posts}" class="blog-card" style="position: relative;">
-                    <img th:src="${post.imageUrl}" th:alt="${post.title}" class="blog-img">
-                    <div class="blog-content">
-                        <span class="blog-date" th:text="${post.date}">Date</span>
-                        <h3 th:text="${post.title}">Post Title</h3>
-                        <div style="margin-top: 1rem;">
-                            <a th:href="@{'/admin/blog/delete/' + ${post.id}}" class="btn"
-                                style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); width: 100%; text-align: center; display: block;">Delete
-                                Post</a>
-                        </div>
-                    </div>
-                </article>
+        <div class="section-content animate">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <h1>Manage Blog Posts</h1>
+                <button onclick="showAddForm()" class="btn btn-primary">+ Create New Post</button>
             </div>
-            <div th:if="${#lists.isEmpty(posts)}" style="text-align: center; padding: 5rem; color: var(--text-muted);">
-                No blog posts yet. Share some industry insights!
+
+            <div id="addForm"
+                style="display: none; background: var(--bg-card); padding: 2rem; border-radius: 20px; border: 1px solid var(--primary); margin-bottom: 3rem;">
+                <h3>Add New Article</h3>
+                <form id="newBlogForm"
+                    style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label>Article Title</label>
+                        <input type="text" id="b_title" required
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Thumbnail URL</label>
+                        <input type="text" id="b_image" placeholder="https://..."
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="b_content" rows="10" required
+                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Publish Post</button>
+                        <button type="button" onclick="hideAddForm()" class="btn" style="color: white;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog posts loaded here -->
             </div>
         </div>
     </div>
+
+    <script>
+        if (!localStorage.getItem('admin_token')) window.location.href = '/login';
+
+        function showAddForm() { document.getElementById('addForm').style.display = 'block'; }
+        function hideAddForm() { document.getElementById('addForm').style.display = 'none'; }
+
+        async function loadBlog() {
+            const res = await fetch('/api/blog');
+            const posts = await res.json();
+            const grid = document.getElementById('blogGrid');
+            grid.innerHTML = posts.map(p => `
+                <div class="blog-card animate" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px;">
+                    <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                    <h3>${p.title}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">${p.content.substring(0, 150)}...</p>
+                    <button onclick="removePost(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid #f43f5e;">Remove Post</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('newBlogForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                title: document.getElementById('b_title').value,
+                image_url: document.getElementById('b_image').value,
+                content: document.getElementById('b_content').value
+            };
+
+            await fetch('/api/blog', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            hideAddForm();
+            loadBlog();
+        };
+
+        async function removePost(id) {
+            if (confirm('Delete this article?')) {
+                await fetch('/api/blog?id=' + id, { method: 'DELETE' });
+                loadBlog();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = '/login';
+        }
+
+        loadBlog();
+    </script>
 </body>
 
 </html>

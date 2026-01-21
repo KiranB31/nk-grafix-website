@@ -12,7 +12,7 @@
 
 <body>
     <nav>
-        <a href="/" class="logo">GRAFIX.</a>
+        <a href="/" class="logo" id="header-logo">GRAFIX.</a>
         <div class="nav-links">
             <a href="/" class="active">Home</a>
             <a href="/products">Products</a>
@@ -26,8 +26,8 @@
 
     <header class="hero">
         <h1 class="animate">Visualizing Tomorrow,<br>Designing Today.</h1>
-        <p class="animate" style="animation-delay: 0.2s;">Grafix is a premier digital studio specializing in premium
-            brand assets and cutting-edge visual identities.</p>
+        <p id="hero-sub" class="animate" style="animation-delay: 0.2s;">Grafix is a premier digital studio specializing
+            in premium brand assets.</p>
         <div class="animate" style="animation-delay: 0.4s; margin-top: 2rem;">
             <a href="/products" class="btn btn-primary">Our Products</a>
             <a href="/contact" class="btn" style="border: 1px solid white; color: white; margin-left: 1rem;">Work With
@@ -47,10 +47,19 @@
 
     <section class="section section-alt">
         <div class="section-content">
-            <h2 class="section-title">Our Dynamic Team</h2>
+            <h2 class="section-title">Insights from our Blog</h2>
+            <div id="blog-grid" class="blog-grid">
+                <!-- Blog loaded from DB -->
+                <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Loading blog...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-content">
+            <h2 class="section-title">Our Team</h2>
             <div id="team-grid" class="grid"
                 style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
-                <!-- Staff loaded from DB -->
                 <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Loading team...</p>
             </div>
         </div>
@@ -59,17 +68,21 @@
     <footer style="padding: 4rem 8%; background: #070b14; border-top: 1px solid rgba(255,255,255,0.05);">
         <div id="footer-content"
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
-            <!-- Business Info Loaded from DB -->
         </div>
     </footer>
 
     <script>
-        // Analytics/Log visitor
         fetch('/api/log');
 
         async function loadContent() {
             try {
-                // Load Products from MySQL API
+                // Biz Info
+                const bizRes = await fetch('/api/business');
+                const biz = await bizRes.json();
+                document.getElementById('header-logo').innerText = (biz.company_name || 'GRAFIX') + '.';
+                document.getElementById('hero-sub').innerText = biz.philosophy ? biz.philosophy.substring(0, 100) + '...' : 'Premium digital studio specializing in brand assets.';
+
+                // Products
                 const prodRes = await fetch('/api/products');
                 const products = await prodRes.json();
                 const productsGrid = document.getElementById('products-grid');
@@ -85,40 +98,47 @@
                     </div>
                 `).join('');
 
-                // Load Team from MySQL API
+                // Blog
+                const blogRes = await fetch('/api/blog');
+                const posts = await blogRes.json();
+                const blogGrid = document.getElementById('blog-grid');
+                blogGrid.innerHTML = posts.slice(0, 2).map(post => `
+                    <article class="blog-card animate">
+                        <img src="${post.image_url || '/images/card2.png'}" alt="${post.title}" class="blog-img">
+                        <div class="blog-content">
+                            <h3>${post.title}</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
+                            <a href="/blog" class="blog-link">Read More</a>
+                        </div>
+                    </article>
+                `).join('');
+
+                // Team
                 const teamRes = await fetch('/api/staff');
                 const staff = await teamRes.json();
                 const teamGrid = document.getElementById('team-grid');
-                if (staff.length > 0) {
-                    teamGrid.innerHTML = staff.map(member => `
-                        <div class="card animate" style="text-align: center;">
-                            <img src="${member.image_url || '/images/card1.png'}" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; margin-bottom: 1rem;">
-                            <h4>${member.name}</h4>
-                            <p style="color: var(--primary); font-size: 0.8rem;">${member.role}</p>
-                        </div>
-                    `).join('');
-                } else {
-                    teamGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Team members coming soon.</p>';
-                }
+                teamGrid.innerHTML = staff.map(member => `
+                    <div class="card animate" style="text-align: center;">
+                        <img src="${member.image_url || '/images/card1.png'}" style="width: 80px; height: 80px; border-radius: 50%;">
+                        <h4>${member.name}</h4>
+                        <p style="color: var(--primary); font-size: 0.7rem;">${member.role}</p>
+                    </div>
+                `).join('');
 
-                // Load Footer Info
-                const bizRes = await fetch('/api/business');
-                const biz = await bizRes.json();
+                // Footer
                 const footer = document.getElementById('footer-content');
                 footer.innerHTML = `
                     <div>
-                        <a href="/" class="logo" style="margin-bottom: 1.5rem; display: block;">${biz.company_name || 'GRAFIX'}.</a>
-                        <p style="color: var(--text-muted);"> professional studio specializing in premium digital assets.</p>
+                        <div class="logo">${biz.company_name || 'GRAFIX'}</div>
+                        <p style="color: var(--text-muted);">Owned by ${biz.owner_name || 'Creative Studio'}.</p>
                     </div>
                     <div>
                         <h4 style="margin-bottom: 1.5rem;">Contact</h4>
-                        <p style="color: var(--text-muted);">${biz.email}<br>${biz.address || 'Global Studio'}<br>${biz.phone}</p>
+                        <p style="color: var(--text-muted);">${biz.email}<br>${biz.address || 'Global'}</p>
                     </div>
                 `;
 
-            } catch (err) {
-                console.error('Error loading dynamic content:', err);
-            }
+            } catch (err) { console.error(err); }
         }
         loadContent();
     </script>

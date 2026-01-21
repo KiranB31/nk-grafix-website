@@ -5,22 +5,22 @@ module.exports = async (req, res) => {
         const db = await getDb();
 
         if (req.method === 'GET') {
-            const [products] = await db.execute('SELECT * FROM products ORDER BY created_at DESC');
-            return res.status(200).json(products);
+            const [posts] = await db.execute('SELECT * FROM blog_posts ORDER BY created_at DESC');
+            return res.status(200).json(posts);
         }
 
         if (req.method === 'POST') {
-            const { name, price, description, image_url, category } = req.body;
+            const { title, content, image_url, author } = req.body;
             await db.execute(
-                'INSERT INTO products (name, price, description, image_url, category) VALUES (?, ?, ?, ?, ?)',
-                [name, price, description, image_url, category]
+                'INSERT INTO blog_posts (title, content, image_url, author) VALUES (?, ?, ?, ?)',
+                [title, content, image_url, author || 'Admin']
             );
             return res.status(200).json({ success: true });
         }
 
         if (req.method === 'DELETE') {
             const { id } = req.query;
-            await db.execute('DELETE FROM products WHERE id = ?', [id]);
+            await db.execute('DELETE FROM blog_posts WHERE id = ?', [id]);
             return res.status(200).json({ success: true });
         }
 

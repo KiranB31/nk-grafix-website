@@ -24,10 +24,9 @@
 
     <header class="section" style="padding-top: 10rem;">
         <div class="section-content animate">
-            <h1 class="section-title" style="text-align: left;">Pioneering Design<br>Since 2018.</h1>
-            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px;">
-                Grafix started as a small boutique studio in London. Today, we are a global leader in premium digital
-                and print assets, serving over 5,000 clients worldwide.
+            <h1 id="about-title" class="section-title" style="text-align: left;">Pioneering Design.</h1>
+            <p id="about-vision" style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px;">
+                Loading vision...
             </p>
         </div>
     </header>
@@ -39,19 +38,13 @@
             </div>
             <div>
                 <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">Our Philosophy</h2>
-                <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.8;">
-                    We believe that design is not just about how it looks, but how it works. Our team of expert
-                    designers focuses on the intersection of aesthetics and user psychology to create products that
-                    convert and inspire.
+                <p id="about-philosophy" style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.8;">
+                    Loading philosophy...
                 </p>
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <h2>5K+</h2>
-                        <p>Global Clients</p>
-                    </div>
-                    <div class="stat-item">
-                        <h2>12K</h2>
-                        <p>Assets Sold</p>
+                        <h2 id="owner-name">-</h2>
+                        <p>Studio Owner</p>
                     </div>
                     <div class="stat-item">
                         <h2>99%</h2>
@@ -62,40 +55,49 @@
         </div>
     </section>
 
-    <section class="section">
-        <div class="section-content">
-            <div class="vision-card animate">
-                <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">The Future Focus</h2>
-                <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem;">
-                    Our roadmap for 2026 includes AI-assisted design automation and holographic AR card displays. We are
-                    committed to pushing the boundaries of what's possible in the graphic design industry.
-                </p>
-                <a href="/contact" class="btn btn-primary">Join Our Vision</a>
-            </div>
-        </div>
-    </section>
-
     <footer style="padding: 4rem 10%; background: #070b14; border-top: 1px solid rgba(255,255,255,0.05);">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
-            <div>
-                <div class="logo" style="margin-bottom: 1.5rem;">GRAFIX.</div>
-                <p style="color: var(--text-muted);">Expanding the reach of creativity through premium design solutions.
-                </p>
-            </div>
-            <div>
-                <h4 style="margin-bottom: 1.5rem;">Quick Links</h4>
-                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    <a href="/" style="color: var(--text-muted); text-decoration: none;">Home</a>
-                    <a href="/products" style="color: var(--text-muted); text-decoration: none;">Products</a>
-                    <a href="/about" style="color: var(--text-muted); text-decoration: none;">About</a>
-                </div>
-            </div>
-            <div>
-                <h4 style="margin-bottom: 1.5rem;">Contact Info</h4>
-                <p style="color: var(--text-muted);">hello@grafix.com<br>+1 (555) 123-4567<br>123 Design Street, CA</p>
-            </div>
+        <div id="footer-content"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem;">
+            <!-- Dynamic Footer -->
         </div>
     </footer>
+
+    <script>
+        async function loadAbout() {
+            try {
+                const res = await fetch('/api/business');
+                const biz = await res.json();
+
+                document.getElementById('about-title').innerText = biz.company_name ? `About ${biz.company_name}` : 'Pioneering Design';
+                document.getElementById('about-vision').innerText = biz.vision || 'Building the future of digital assets.';
+                document.getElementById('about-philosophy').innerText = biz.philosophy || 'Our team focus on the intersection of aesthetics and user psychology.';
+                document.getElementById('owner-name').innerText = biz.owner_name || 'Marcus Vance';
+
+                const footer = document.getElementById('footer-content');
+                footer.innerHTML = `
+                    <div>
+                        <div class="logo" style="margin-bottom: 1.5rem;">${biz.company_name || 'GRAFIX'}</div>
+                        <p style="color: var(--text-muted);"> professional design studio powered by ${biz.owner_name || 'creative experts'}.</p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1.5rem;">Quick Links</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <a href="/" style="color: var(--text-muted); text-decoration: none;">Home</a>
+                            <a href="/products" style="color: var(--text-muted); text-decoration: none;">Products</a>
+                            <a href="/blog" style="color: var(--text-muted); text-decoration: none;">Insights</a>
+                        </div>
+                    </div>
+                     <div>
+                        <h4 style="margin-bottom: 1.5rem;">Contact</h4>
+                        <p style="color: var(--text-muted);">${biz.email}<br>${biz.address || 'Global Studio'}<br>${biz.phone}</p>
+                    </div>
+                `;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        loadAbout();
+    </script>
 </body>
 
 </html>
