@@ -8,14 +8,18 @@ module.exports = async (req, res) => {
         const { username, password, fullName, email } = req.body;
         const db = await getDb();
 
-        // Check if first admin or exists
-        const [existing] = await db.execute('SELECT id FROM admins LIMIT 1');
+        // Check if username already exists
+        const { rows: existing } = await db.query('SELECT id FROM admins WHERE username = $1', [username]);
+
+        if (existing.length > 0) {
+            return res.status(400).json({ error: 'Username already taken' });
+        }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await db.execute(
-            'INSERT INTO admins (username, password, full_name, email) VALUES (?, ?, ?, ?)',
+        await db.query(
+            'INSERT INTO admins (username, password, full_name, email) VALUES ($1, $2, $3, $4)',
             [username, hashedPassword, fullName, email]
         );
 

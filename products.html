@@ -54,22 +54,30 @@
     <script>
         async function loadProducts() {
             try {
-                const res = await fetch('/products.json');
+                // Fetch from dynamic API, not static JSON
+                const res = await fetch('/api/products');
                 const products = await res.json();
                 const grid = document.getElementById('products-grid');
+
+                if (products.length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">No products available yet.</p>';
+                    return;
+                }
+
                 grid.innerHTML = products.map(product => `
                     <div class="card animate">
-                        <img src="${product.imageUrl}" alt="${product.name}">
+                        <img src="${product.image_url || '/images/card1.png'}" alt="${product.name}" class="product-preview-img">
                         <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
-                            <span style="font-weight: 800; color: var(--primary);">${product.price}</span>
+                        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">${product.description}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                            <span style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">${product.price}</span>
                             <a href="/contact" class="btn btn-primary">Inquire</a>
                         </div>
                     </div>
                 `).join('');
             } catch (err) {
                 console.error(err);
+                document.getElementById('products-grid').innerHTML = '<p style="text-align: center; color: var(--accent);">Failed to load products.</p>';
             }
         }
         loadProducts();

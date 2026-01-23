@@ -28,10 +28,26 @@
         <div class="section-content animate">
             <h1>Business Settings</h1>
             <p style="color: var(--text-muted); margin-bottom: 3rem;">Manage your studio's public information and
-                contact details.</p>
+                visuals.</p>
 
             <form id="profileForm"
                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);">
+
+                <div class="form-group" style="grid-column: span 2;">
+                    <label style="display: block; margin-bottom: 1rem;">About Us Image</label>
+                    <div style="display: flex; gap: 2rem; align-items: start;">
+                        <img id="current_image" src=""
+                            style="width: 200px; height: 120px; object-fit: cover; border-radius: 12px; background: rgba(0,0,0,0.3); display: none;">
+                        <div style="flex: 1;">
+                            <input type="file" id="about_image_file" accept="image/*"
+                                style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;">
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Upload a new
+                                image to replace the current one on the About page.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="about_image_url">
+                </div>
+
                 <div class="form-group">
                     <label>Studio Name</label>
                     <input type="text" id="company_name" required
@@ -68,74 +84,120 @@
                         style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;"></textarea>
                 </div>
                 <div style="grid-column: span 2;">
-                    <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem;">Save Changes</button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary" style="padding: 1rem 3rem;">Save
+                        Changes</button>
                     <span id="saveStatus" style="margin-left: 1rem; font-size: 0.9rem;"></span>
                 </div>
             </form>
         </div>
+
+        <!-- Credentials Form (Collapsed by default maybe? Keeping generic for now) -->
+        <div style="margin-top: 4rem; opacity: 0.5;">
+            <p style="color: var(--text-muted);">Credential updates are distinct from business profile updates. <a
+                    href="#creds" onclick="document.getElementById('credsForm').scrollIntoView()"
+                    style="color: var(--primary);">Scroll to credentials</a></p>
+        </div>
+
+        <div id="credsFormPlaceholder" style="margin-bottom: 5rem;"></div>
     </div>
 
     <script>
-        // Auth Check
-        if (!localStorage.getItem('admin_token')) {
-            window.location.href = '/login';
-        }
+        if (!localStorage.getItem('admin_token')) window.location.href = '/login';
 
-        function logout() {
-            localStorage.removeItem('admin_token');
-            localStorage.removeItem('admin_user');
-            window.location.href = '/login';
-        }
-
-        // Load Initial Data
         async function loadProfile() {
-            const res = await fetch('/api/business');
-            const data = await res.json();
+            try {
+                const res = await fetch('/api/business');
+                const data = await res.json();
 
-            document.getElementById('company_name').value = data.company_name || '';
-            document.getElementById('owner_name').value = data.owner_name || '';
-            document.getElementById('email').value = data.email || '';
-            document.getElementById('phone').value = data.phone || '';
-            document.getElementById('address').value = data.address || '';
-            document.getElementById('philosophy').value = data.philosophy || '';
-            document.getElementById('vision').value = data.vision || '';
+                document.getElementById('company_name').value = data.company_name || '';
+                document.getElementById('owner_name').value = data.owner_name || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('address').value = data.address || '';
+                document.getElementById('philosophy').value = data.philosophy || '';
+                document.getElementById('vision').value = data.vision || '';
+
+                if (data.about_image_url) {
+                    const img = document.getElementById('current_image');
+                    img.src = data.about_image_url;
+                    img.style.display = 'block';
+                    document.getElementById('about_image_url').value = data.about_image_url;
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         document.getElementById('profileForm').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('saveBtn');
             const status = document.getElementById('saveStatus');
-            status.innerText = 'Saving...';
-            status.style.color = 'var(--primary)';
+            const originalText = btn.innerText;
 
-            const formData = {
-                company_name: document.getElementById('company_name').value,
-                owner_name: document.getElementById('owner_name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                philosophy: document.getElementById('philosophy').value,
-                vision: document.getElementById('vision').value
-            };
+            btn.innerText = 'Saving...';
+            btn.disabled = true;
+            status.innerText = '';
 
             try {
+                let imageUrl = document.getElementById('about_image_url').value;
+
+                // Handle Image Upload if file selected
+                const fileInput = document.getElementById('about_image_file');
+                if (fileInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!uploadRes.ok) throw new Error('Image upload failed');
+
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.url;
+                }
+
+                // Save Profile
+                const profileData = {
+                    company_name: document.getElementById('company_name').value,
+                    owner_name: document.getElementById('owner_name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    philosophy: document.getElementById('philosophy').value,
+                    vision: document.getElementById('vision').value,
+                    about_image_url: imageUrl
+                };
+
                 const res = await fetch('/api/business', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + localStorage.getItem('admin_token')
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(profileData)
                 });
 
                 if (res.ok) {
                     status.innerText = 'Settings updated successfully!';
                     status.style.color = '#10b981';
+                    // Update preview
+                    if (imageUrl) {
+                        const img = document.getElementById('current_image');
+                        img.src = imageUrl;
+                        img.style.display = 'block';
+                    }
                 } else {
                     throw new Error('Update failed');
                 }
             } catch (err) {
-                status.innerText = 'Error saving settings.';
+                console.error(err);
+                status.innerText = 'Error saving settings: ' + err.message;
                 status.style.color = '#f43f5e';
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         };
 

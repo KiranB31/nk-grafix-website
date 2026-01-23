@@ -76,7 +76,7 @@
             const grid = document.getElementById('blogGrid');
             grid.innerHTML = posts.map(p => `
                 <div class="blog-card animate" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px;">
-                    <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                    <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
                     <h3>${p.title}</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">${p.content.substring(0, 150)}...</p>
                     <button onclick="removePost(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid #f43f5e;">Remove Post</button>

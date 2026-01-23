@@ -5,14 +5,14 @@ module.exports = async (req, res) => {
         const db = await getDb();
 
         if (req.method === 'GET') {
-            const [products] = await db.execute('SELECT * FROM products ORDER BY created_at DESC');
+            const { rows: products } = await db.query('SELECT * FROM products ORDER BY created_at DESC');
             return res.status(200).json(products);
         }
 
         if (req.method === 'POST') {
             const { name, price, description, image_url, category } = req.body;
-            await db.execute(
-                'INSERT INTO products (name, price, description, image_url, category) VALUES (?, ?, ?, ?, ?)',
+            await db.query(
+                'INSERT INTO products (name, price, description, image_url, category) VALUES ($1, $2, $3, $4, $5)',
                 [name, price, description, image_url, category]
             );
             return res.status(200).json({ success: true });
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 
         if (req.method === 'DELETE') {
             const { id } = req.query;
-            await db.execute('DELETE FROM products WHERE id = ?', [id]);
+            await db.query('DELETE FROM products WHERE id = $1', [id]);
             return res.status(200).json({ success: true });
         }
 

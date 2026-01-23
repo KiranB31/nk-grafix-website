@@ -8,6 +8,100 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .file-upload-area input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 
 <body>
@@ -27,89 +121,188 @@
     <div class="section" style="padding-top: 8rem;">
         <div class="section-content animate">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                <h1>Product Inventory</h1>
-                <button onclick="showAddForm()" class="btn btn-primary">+ Add New Product</button>
+                <div>
+                    <h1 style="margin-bottom: 0.5rem;">Product Inventory</h1>
+                    <p style="color: var(--text-muted);">Manage your digital assets and physical products.</p>
+                </div>
+                <button onclick="showAddForm()" class="btn btn-primary">
+                    <i class="fas fa-plus" style="margin-right: 0.5rem;"></i> Add Product
+                </button>
             </div>
 
-            <div id="addForm"
-                style="display: none; background: var(--bg-card); padding: 2rem; border-radius: 20px; border: 1px solid var(--primary); margin-bottom: 3rem;">
-                <h3>Add New Product</h3>
-                <form id="newProductForm"
-                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="product-grid" id="productGrid">
+                <!-- Products loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="hideAddForm()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Add New Product</h2>
+
+            <form id="newProductForm" style="display: grid; gap: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                     <div class="form-group">
-                        <label>Product Name</label>
+                        <label style="display: block; color: var(--text-muted); margin-bottom: 0.5rem;">Product
+                            Name</label>
                         <input type="text" id="p_name" required
                             style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
                     </div>
                     <div class="form-group">
-                        <label>Price (e.g. $199)</label>
-                        <input type="text" id="p_price" required
+                        <label style="display: block; color: var(--text-muted); margin-bottom: 0.5rem;">Price</label>
+                        <input type="text" id="p_price" placeholder="$0.00" required
                             style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Image URL</label>
-                        <input type="text" id="p_image" placeholder="https://..."
-                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Description</label>
-                        <textarea id="p_desc" rows="3"
-                            style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;"></textarea>
-                    </div>
-                    <div style="grid-column: span 2;">
-                        <button type="submit" class="btn btn-primary">Save Product</button>
-                        <button type="button" onclick="hideAddForm()" class="btn" style="color: white;">Cancel</button>
-                    </div>
-                </form>
-            </div>
+                </div>
 
-            <div class="grid" id="productGrid">
-                <!-- Products loaded here -->
-            </div>
+                <div class="form-group">
+                    <label style="display: block; color: var(--text-muted); margin-bottom: 0.5rem;">Product
+                        Image</label>
+                    <div class="file-upload-area" id="dropArea">
+                        <input type="file" id="p_file" accept="image/*" required onchange="handleFileSelect(this)">
+                        <div id="uploadPlaceholder">
+                            <i class="fas fa-cloud-upload-alt"
+                                style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+                            <p style="color: var(--text-muted);">Click to upload or drag and drop</p>
+                        </div>
+                        <div id="uploadPreview" style="display: none;">
+                            <p id="fileName" style="color: var(--primary); font-weight: 500;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: block; color: var(--text-muted); margin-bottom: 0.5rem;">Description</label>
+                    <textarea id="p_desc" rows="3"
+                        style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;" id="submitBtn">Publish
+                        Product</button>
+                    <button type="button" onclick="hideAddForm()" class="btn"
+                        style="background: rgba(255,255,255,0.05);">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         if (!localStorage.getItem('admin_token')) window.location.href = '/login';
 
-        function showAddForm() { document.getElementById('addForm').style.display = 'block'; }
-        function hideAddForm() { document.getElementById('addForm').style.display = 'none'; }
+        const modal = document.getElementById('addModal');
+        const form = document.getElementById('newProductForm');
 
-        async function loadProducts() {
-            const res = await fetch('/api/products');
-            const products = await res.json();
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(p => `
-                <div class="card animate">
-                    <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;">
-                    <h3>${p.name}</h3>
-                    <p style="color: var(--primary); font-weight: 800;">${p.price}</p>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">${p.description}</p>
-                    <button onclick="removeProduct(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid #f43f5e;">Delete</button>
-                </div>
-            `).join('');
+        function showAddForm() {
+            modal.classList.add('show');
         }
 
-        document.getElementById('newProductForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const data = {
-                name: document.getElementById('p_name').value,
-                price: document.getElementById('p_price').value,
-                image_url: document.getElementById('p_image').value,
-                description: document.getElementById('p_desc').value
-            };
+        function hideAddForm() {
+            modal.classList.remove('show');
+            form.reset();
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+            document.getElementById('uploadPreview').style.display = 'none';
+        }
 
-            await fetch('/api/products', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            hideAddForm();
-            loadProducts();
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('fileName').textContent = input.files[0].name;
+            }
+        }
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideAddForm();
+        });
+
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/products');
+                const products = await res.json();
+                const grid = document.getElementById('productGrid');
+
+                if (products.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No products found.</p>';
+                    return;
+                }
+
+                grid.innerHTML = products.map(p => `
+                    <div class="card animate" style="display: flex; flex-direction: column;">
+                        <img src="${p.image_url || '/images/card1.png'}" class="product-card-img" alt="${p.name}">
+                        <div style="padding-top: 1.5rem; flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 1.2rem; margin: 0;">${p.name}</h3>
+                                <span style="color: var(--primary); font-weight: 700;">${p.price}</span>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+                                ${p.description || 'No description available.'}
+                            </p>
+                            <button onclick="removeProduct(${p.id})" class="btn" 
+                                style="width: 100%; padding: 0.8rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); font-size: 0.9rem; border-radius: 8px;">
+                                <i class="fas fa-trash-alt" style="margin-right: 0.5rem;"></i> Remove Product
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Uploading...';
+            btn.disabled = true;
+
+            try {
+                // 1. Upload Image
+                const fileInput = document.getElementById('p_file');
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const uploadData = await uploadRes.json();
+
+                if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
+
+                // 2. Save Product
+                const productData = {
+                    name: document.getElementById('p_name').value,
+                    price: document.getElementById('p_price').value,
+                    image_url: uploadData.url, // Use the uploaded URL
+                    description: document.getElementById('p_desc').value
+                };
+
+                const saveRes = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+
+                if (!saveRes.ok) throw new Error('Failed to save product');
+
+                hideAddForm();
+                loadProducts();
+
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         };
 
         async function removeProduct(id) {
-            if (confirm('Are you sure?')) {
+            if (confirm('Are you sure you want to delete this product?')) {
                 await fetch('/api/products?id=' + id, { method: 'DELETE' });
                 loadProducts();
             }

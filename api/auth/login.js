@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         const { username, password } = req.body;
         const db = await getDb();
 
-        const [users] = await db.execute('SELECT * FROM admins WHERE username = ?', [username]);
+        const { rows: users } = await db.query('SELECT * FROM admins WHERE username = $1', [username]);
 
         if (users.length === 0) {
             return res.status(401).json({ error: 'Invalid credentials' });

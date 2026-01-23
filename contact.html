@@ -73,6 +73,14 @@
     <section class="section">
         <h1 class="section-title">Get In Touch</h1>
 
+        <!-- Dynamic Contact Info Section -->
+        <div class="section-content" style="text-align: center; margin-bottom: 3rem;">
+            <div id="contact-info"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto; color: var(--text-muted);">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+
         <div id="success-msg">
             Message sent successfully! We'll get back to you soon.
         </div>
@@ -102,6 +110,35 @@
         if (urlParams.get('success') === 'true') {
             document.getElementById('success-msg').style.display = 'block';
         }
+
+        async function loadContactInfo() {
+            try {
+                const res = await fetch('/api/business');
+                const biz = await res.json();
+
+                const container = document.getElementById('contact-info');
+                container.innerHTML = `
+                    <div>
+                        <i class="fas fa-envelope" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 0.5rem;">Email</h3>
+                        <p>${biz.email || 'hello@grafix.com'}</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 0.5rem;">Phone</h3>
+                        <p>${biz.phone || '+1 (000) 000-0000'}</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 0.5rem;">Office</h3>
+                        <p>${biz.address || 'Global Digital Studio'}</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to load contact info', error);
+            }
+        }
+        loadContactInfo();
     </script>
 </body>
 
