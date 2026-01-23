@@ -1,17 +1,17 @@
 :root {
-    --primary: #4F46E5;
-    /* Deep Indigo - Professional */
-    --primary-hover: #4338ca;
-    --bg-dark: #0B1120;
-    /* Darker Slate, less 'black' */
-    --bg-card: rgba(30, 41, 59, 0.65);
-    --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
-    --accent: #E11D48;
-    /* Sophisticated Rose */
-    --gold: #F59E0B;
-    /* Premium Accent */
-    --surface-gradient: linear-gradient(145deg, rgba(30, 41, 59, 0.4), rgba(15, 23, 42, 0.4));
+    --primary: #D4AF37;
+    /* Premium Gold */
+    --primary-hover: #B8860B;
+    /* Darker Gold */
+    --bg-dark: #070B14;
+    /* Deep Onyx */
+    --bg-card: rgba(20, 25, 35, 0.7);
+    --text-main: #FDFDFD;
+    --text-muted: #8E9196;
+    --accent: #FFD700;
+    /* Bright Gold */
+    --gold: #D4AF37;
+    --surface-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1));
 }
 
 * {
@@ -28,8 +28,8 @@ input {
 body {
     background-color: var(--bg-dark);
     background-image:
-        radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.15), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(225, 29, 72, 0.1), transparent 25%);
+        radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(255, 215, 0, 0.05), transparent 25%);
     color: var(--text-main);
     line-height: 1.6;
     overflow-x: hidden;
@@ -46,17 +46,18 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(7, 11, 20, 0.85);
     backdrop-filter: blur(20px);
     z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #6366f1, #f43f5e);
+    background: linear-gradient(135deg, #FFD700, #D4AF37);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -1px;
     text-decoration: none;
@@ -290,7 +291,7 @@ nav {
 /* Newsletter Section */
 .newsletter-section {
     padding: 6rem 8%;
-    background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(244, 63, 94, 0.1));
+    background: linear-gradient(to right, rgba(212, 175, 55, 0.1), rgba(255, 215, 0, 0.05));
     border-radius: 40px;
     margin: 4rem 8%;
     text-align: center;
@@ -359,6 +360,43 @@ nav {
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 1.5rem;
+}
+
+/* Premium Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #000 !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+}
+
+.btn-outline {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateY(-2px);
 }
 
 /* Animations */

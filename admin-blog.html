@@ -20,7 +20,7 @@
             <a href="/admin/blog" class="active">Blog</a>
             <a href="/admin/profile">Settings</a>
             <button onclick="logout()" class="btn"
-                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
+                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(225, 29, 72, 0.1); color: #ff4d4d; border: 1px solid rgba(225, 29, 72, 0.2);">Logout</button>
         </div>
     </nav>
 
@@ -42,9 +42,10 @@
                             style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
                     </div>
                     <div class="form-group">
-                        <label>Thumbnail URL</label>
-                        <input type="text" id="b_image" placeholder="https://..."
+                        <label>Thumbnail Image</label>
+                        <input type="file" id="b_file" accept="image/*"
                             style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px;">
+                        <input type="hidden" id="b_image">
                     </div>
                     <div class="form-group">
                         <label>Content</label>
@@ -79,26 +80,49 @@
                     <img src="${p.image_url || '/images/card1.png'}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
                     <h3>${p.title}</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">${p.content.substring(0, 150)}...</p>
-                    <button onclick="removePost(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(244,63,94,0.1); color: #f43f5e; border: 1px solid #f43f5e;">Remove Post</button>
+                    <button onclick="removePost(${p.id})" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(225,29,72,0.1); color: #ff4d4d; border: 1px solid rgba(225,29,72,0.3);">Remove Post</button>
                 </div>
             `).join('');
         }
 
         document.getElementById('newBlogForm').onsubmit = async (e) => {
             e.preventDefault();
-            const data = {
-                title: document.getElementById('b_title').value,
-                image_url: document.getElementById('b_image').value,
-                content: document.getElementById('b_content').value
-            };
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Publishing...';
+            btn.disabled = true;
 
-            await fetch('/api/blog', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            hideAddForm();
-            loadBlog();
+            try {
+                let imageUrl = '';
+                const fileInput = document.getElementById('b_file');
+
+                if (fileInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+                    const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.url;
+                }
+
+                const data = {
+                    title: document.getElementById('b_title').value,
+                    image_url: imageUrl,
+                    content: document.getElementById('b_content').value
+                };
+
+                await fetch('/api/blog', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                hideAddForm();
+                loadBlog();
+            } catch (err) {
+                alert('Error publishing post: ' + err.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         };
 
         async function removePost(id) {

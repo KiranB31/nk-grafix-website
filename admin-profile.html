@@ -20,7 +20,7 @@
             <a href="/admin/blog">Blog</a>
             <a href="/admin/profile" class="active">Settings</a>
             <button onclick="logout()" class="btn"
-                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2);">Logout</button>
+                style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(225, 29, 72, 0.1); color: #ff4d4d; border: 1px solid rgba(225, 29, 72, 0.2);">Logout</button>
         </div>
     </nav>
 
@@ -194,7 +194,7 @@
             } catch (err) {
                 console.error(err);
                 status.innerText = 'Error saving settings: ' + err.message;
-                status.style.color = '#f43f5e';
+                status.style.color = '#ff4d4d';
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;

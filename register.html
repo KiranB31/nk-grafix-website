@@ -8,35 +8,41 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body style="background: var(--bg);">
-    <div class="login-container" style="max-width: 500px; margin: 10vh auto; color: #000000;">
-        <h1 style="color: #000000;">Admin Registration</h1>
-        <p style="color: #4b5563;">Create your professional admin account</p>
+<body style="background: var(--bg-dark);">
+    <div class="login-container"
+        style="max-width: 500px; margin: 10vh auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1); text-align: center; backdrop-filter: blur(10px);">
+        <div class="logo" style="margin-bottom: 1.5rem;">GRAFIX. ADMIN</div>
+        <h1 style="color: white; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">Admin Registration</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Create your professional admin account</p>
 
         <form id="regForm" style="margin-top: 2rem; text-align: left;">
-            <div class="form-group">
-                <label style="color: #000000; font-weight: 600; display: block; margin-bottom: 0.5rem;">Full
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label
+                    style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Full
                     Name</label>
                 <input type="text" id="fullName" required
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); color: #ffffff !important; border-radius: 8px;">
+                    style="width: 100%; padding: 0.9rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); color: #ffffff !important; border-radius: 12px; outline: none;">
             </div>
-            <div class="form-group">
-                <label style="color: #000000; font-weight: 600; display: block; margin-bottom: 0.5rem;">Email</label>
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label
+                    style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Email</label>
                 <input type="email" id="email" required
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); color: #ffffff !important; border-radius: 8px;">
+                    style="width: 100%; padding: 0.9rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); color: #ffffff !important; border-radius: 12px; outline: none;">
             </div>
-            <div class="form-group">
-                <label style="color: #000000; font-weight: 600; display: block; margin-bottom: 0.5rem;">Username</label>
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label
+                    style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Username</label>
                 <input type="text" id="username" required
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); color: #ffffff !important; border-radius: 8px;">
+                    style="width: 100%; padding: 0.9rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); color: #ffffff !important; border-radius: 12px; outline: none;">
             </div>
-            <div class="form-group">
-                <label style="color: #000000; font-weight: 600; display: block; margin-bottom: 0.5rem;">Password</label>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label
+                    style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Password</label>
                 <input type="password" id="password" required
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); color: #ffffff !important; border-radius: 8px;">
+                    style="width: 100%; padding: 0.9rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); color: #ffffff !important; border-radius: 12px; outline: none;">
             </div>
             <button type="submit" class="btn btn-primary"
-                style="width: 100%; padding: 1rem; margin-top: 1rem; background: #4f46e5; color: white;">Register
+                style="width: 100%; padding: 1.1rem; margin-top: 0.5rem;">Register
                 Admin</button>
         </form>
         <p id="msg" style="margin-top: 1rem;"></p>

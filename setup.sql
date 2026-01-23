@@ -14,7 +14,17 @@ CREATE TABLE IF NOT EXISTS business_info (
     philosophy TEXT,
     vision TEXT,
     owner_name VARCHAR(100),
+    about_image_url TEXT,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Stored Images (BLOB storage for Vercel persistence)
+CREATE TABLE IF NOT EXISTS stored_images (
+    id VARCHAR(50) PRIMARY KEY,
+    data BYTEA NOT NULL,
+    mime_type VARCHAR(50) NOT NULL,
+    filename VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Admin Users

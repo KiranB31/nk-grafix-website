@@ -10,10 +10,10 @@
 
 <body>
     <div class="login-container"
-        style="max-width: 450px; margin: 15vh auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-        <div class="logo" style="margin-bottom: 1rem;">GRAFIX. ADMIN</div>
-        <h1>Portal Access</h1>
-        <p style="color: var(--text-muted);">Please enter your credentials.</p>
+        style="max-width: 450px; margin: 15vh auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1); text-align: center; backdrop-filter: blur(10px);">
+        <div class="logo" style="margin-bottom: 1.5rem;">GRAFIX. ADMIN</div>
+        <h1 style="font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">Portal Access</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Please enter your credentials.</p>
 
         <form id="loginForm" class="login-form" style="margin-top: 2rem; text-align: left;">
             <div id="error-msg"
@@ -23,17 +23,17 @@
 
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label
-                    style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Username</label>
+                    style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Username</label>
                 <input type="text" id="username"
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #ffffff !important;"
+                    style="width: 100%; padding: 1.1rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; color: #ffffff !important; outline: none;"
                     required>
             </div>
 
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label
-                    style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Password</label>
+                    style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Password</label>
                 <input type="password" id="password"
-                    style="width: 100%; padding: 1rem; background-color: #1e293b !important; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #ffffff !important;"
+                    style="width: 100%; padding: 1.1rem; background-color: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; color: #ffffff !important; outline: none;"
                     required>
             </div>
 
