@@ -1,4 +1,4 @@
-const { getDb } = require('../lib/db');
+const { getDb } = require('./lib/db');
 
 module.exports = async (req, res) => {
     try {
